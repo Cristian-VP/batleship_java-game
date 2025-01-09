@@ -1,4 +1,6 @@
 public class Board{
+    public static final String RESET = "\u001B[0m";  // Text Reset
+    public static final String BLUE = "\u001B[0;34m";    // BLUE
     private static char[][] computerBoard;
     private static char[][] playerBoard;
     private static int rows,columns;
@@ -27,10 +29,9 @@ public class Board{
     }
     //Coloca todos los barcos del ordenador según los tipos y cantidades especificados.
     public static void insertShips(int boats, int ships, int battleships, int aircraftCarriers){
+        setShip('P', 5, aircraftCarriers, 1);
+        setShip('Z', 4, battleships, 0);
         setShip('L', 1, boats, 0);
-        setShip('B', 3, ships, randomize(0,1));
-        setShip('Z', 4, battleships, randomize(0,1));
-        setShip('P', 5, aircraftCarriers, randomize(0,1));
     }
     //Invoca la validación para colocar el barco en el tablero y lo coloca.
     public static void setShip(char kindOfShip, int size, int quantity, int position){
@@ -109,31 +110,63 @@ public class Board{
         return  true;
     }
     //Imprime el tablero del jugador
-    public static void printPlayerBoard(){
-        for(int i = -1; i < rows; i++){
-            System.out.printf("  %d", i);
+    public static void printPlayerBoard(int userShoots, String user){
+        System.out.println();
+        System.out.println("#################################################");
+        System.out.println("############### Tablero de "+user+" ################");
+        System.out.println("#################################################");
+        System.out.println();
+        System.out.printf("Disparos restantes: %d\n", userShoots);
+        System.out.print("   ");
+        for(int i = 0; i < columns; i++){
+            System.out.printf("  %d ", i);
+        }
+        System.out.println();
+        System.out.print("   ");
+        for(int i = 0; i < columns; i++){
+            System.out.print(" ---");
         }
         System.out.println();
         for(int i = 0; i < rows; i++){
-                System.out.printf("  %C ", 65+1);
+                System.out.printf(" %C ", 65+i);
             for(int j = 0; j < columns; j++){
                 System.out.printf("| %C ", playerBoard[i][j]);
+
             }
             System.out.println('|');
+            System.out.print("   ");
+            for (int k = 0; k < columns; k++) {
+                System.out.print(" ---");
+            }
+            System.out.println();
         }
+        System.out.println();
     }
     //Imprime el tablero del ordenador.
     public static void printComputerBoard(){
-        for(int i = -1; i < rows; i++){
-            System.out.printf("  %d", i);
+        System.out.print("   ");
+        for(int i = 0; i < columns; i++){
+            System.out.printf("  %d ", i);
+        }
+        System.out.println();
+        System.out.print("   ");
+        for(int i = 0; i < columns; i++){
+            System.out.print(" ---");
         }
         System.out.println();
         for(int i = 0; i < rows; i++){
-            System.out.printf("  %C ", 65+1);
+            System.out.printf(" %C ", 65+i);
             for(int j = 0; j < columns; j++){
-                System.out.printf("| %C ", computerBoard[i][j]);
+                // NO me funciona el color en la consola.
+                System.out.printf("|  %s%c%S ", BLUE,computerBoard[i][j],RESET);
+
             }
             System.out.println('|');
+            System.out.print("   ");
+            for (int k = 0; k < columns; k++) {
+                System.out.print(" ---");
+            }
+            System.out.println();
         }
     }
     //Invoca el controlador de disparos y actualiza el tablero.

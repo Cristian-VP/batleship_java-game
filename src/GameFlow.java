@@ -4,41 +4,61 @@ import java.util.Scanner;
 public class GameFlow {
     private static Scanner scanner;
     private static int tries;
+    private static String user;
 
     public void createGame(){
         Board board = new Board(10,10);
         scanner = new Scanner(System.in);
-        System.out.println("Bienvenido a Hundir la flota");
-        System.out.println("Introduce la dificultad:");
-        System.out.println(" - Cobarde -> 1");
-        System.out.println(" - Aventurero -> 2");
-        System.out.println(" - Destructor -> 3");
+        System.out.println();
+        System.out.println("       Bienvenido a Hundir la flota");
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println("       ¡Prepárate para la batalla!");
+        System.out.println();
+        System.out.println();
+        System.out.print("¡Soldado dime el nombre tu madre!:");
+        user = scanner.next();
+        System.out.println();
+        System.out.println("|                                         |");
+        System.out.println("|=========================================|");
+        System.out.println("|    Dificultad             Número        |");
+        System.out.println("|                                         |");
+        System.out.println("|    Cobarde                  1           |");
+        System.out.println("|    Aventurero               2           |");
+        System.out.println("|    Destructor               3           |");
+        System.out.println("|=========================================|");
+        System.out.println();
+        System.out.print("Ahora, introduce la dificultad de tu partida:");
         Integer difficulty = intDificultValidator(scanner);
+        System.out.println();
+        System.out.println();
         switch (difficulty){
             case 1:
-                System.out.println("######################################");
-                System.out.println("Has seleccionado la dificultad Cobarde");
-                System.out.println("######################################");
+                System.out.println("####################################################");
+                System.out.println("  Has seleccionado la dificultad Cobarde ");
+                System.out.println("  Tienes 50 disparos para hundir 10 barcos de guerra");
+                System.out.println("####################################################");
                 System.out.println();
-                System.out.println("Tienes 50 disparos para hundir 10 barcos de guerra");
-                Board.insertShips(5,3,1,1);
+
+                Board.insertShips(5,3,0,0);
                 tries = 50;
                 break;
             case 2:
-                System.out.println("######################################");
-                System.out.println("Has seleccionado la dificultad Aventurero");
-                System.out.println("######################################");
+                System.out.println("###################################################");
+                System.out.println(" Has seleccionado la dificultad Aventurero ");
+                System.out.println(" Tienes 30 disparos para hundir 5 barcos de guerra");
+                System.out.println("###################################################");
                 System.out.println();
-                System.out.println("Tienes 30 disparos para hundir 5 barcos de guerra");
+
                 Board.insertShips(2,1,1,1);
                 tries = 30;
                 break;
             case 3:
-                System.out.println("######################################");
-                System.out.println("Has seleccionado la dificultad Destructor");
-                System.out.println("######################################");
+                System.out.println("##################################################");
+                System.out.println(" Has seleccionado la dificultad Destructor. ");
+                System.out.println(" Tienes 10 disparos para hundir 2 barcos de guerra.");
+                System.out.println("###################################################");
                 System.out.println();
-                System.out.println("Tienes 10 disparos para hundir 2 barcos de guerra");
+                System.out.println();
                 Board.insertShips(1,1,0,0);
                 tries = 10;
                 break;
@@ -58,7 +78,7 @@ Determina si el jugador gana o pierde.
 
     public static void startGame(Board board) {
         do{
-            Board.printPlayerBoard();
+            Board.printPlayerBoard(tries, user);
             System.out.println("¡Alerta soldado! Es hora de atacar.");
             System.out.print("Introduce la primera coordenada (0-9):");
             int xCoordinate = intCoordinateValidator(scanner);
@@ -136,8 +156,8 @@ Determina si el jugador gana o pierde.
             if (input.hasNextInt()) {
                 dificult = input.nextInt();
                 while (dificult < 1 || dificult > 3) {
-                    System.out.println("Dificultad no válida, solo puedes elegir entre 1, 2 o 3");
-                    System.out.print("Introduce la dificultad:");
+                    System.out.println("Opción no válida, solo puedes elegir entre 1, 2 o 3");
+                    System.out.print("Introduce nuevamente la dificultad:");
                     dificult = scanner.nextInt();
                 }
                 return dificult;
