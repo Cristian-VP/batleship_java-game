@@ -35,10 +35,12 @@ public class Board{
     }
     //Invoca la validación para colocar el barco en el tablero y lo coloca.
     public static void setShip(char kindOfShip, int size, int quantity, int position){
-        while (quantity > 0) {
+        int numberOfShips = quantity;
+        while (numberOfShips > 0) {
             int row = randomize(0, rows - 1);
             int col = randomize(0, columns - 1);
-
+            System.out.println("row: "+row+" col: "+col);
+            System.out.println("number of ships: "+numberOfShips);
             if(!validateBox(size,position, row, col)) {
             // position 0 = horizontal, 1 = vertical
                 if (position == 0) {
@@ -50,7 +52,7 @@ public class Board{
                         computerBoard[row + i][col] = kindOfShip;
                     }
                 }
-                quantity--;
+                numberOfShips--;
             }
         }
     }
@@ -58,6 +60,7 @@ public class Board{
     public static boolean validateBox(int size, int position, int row, int col) {
         if (position == 0) {
             if(col + size  > columns-1){
+                System.out.println("No hay espacio suficiente para colocar el barco");
                 return false;
             }
             // Disponibilidad de las posiciones del tamaño del barco hacia la derecha en horizontal y si guarda una distancia de dos posiciones entre barcos, tanto en horizontal como en vertical
@@ -113,7 +116,8 @@ public class Board{
     public static void printPlayerBoard(int userShoots, String user){
         System.out.println();
         System.out.println("#################################################");
-        System.out.println("############### Tablero de "+user+" ################");
+        String charactersHeader = ( user.equals("Cobarde") ) ? "###############" : "############";
+        System.out.println(" "+charactersHeader+" Tablero de "+user+" "+charactersHeader);
         System.out.println("#################################################");
         System.out.println();
         System.out.printf("Disparos restantes: %d\n", userShoots);
@@ -124,9 +128,9 @@ public class Board{
         System.out.println();
         System.out.print("   ");
         for(int i = 0; i < columns; i++){
-            System.out.print(" ---");
+            System.out.print("+---");
         }
-        System.out.println();
+        System.out.println("+");
         for(int i = 0; i < rows; i++){
                 System.out.printf(" %C ", 65+i);
             for(int j = 0; j < columns; j++){
@@ -136,14 +140,20 @@ public class Board{
             System.out.println('|');
             System.out.print("   ");
             for (int k = 0; k < columns; k++) {
-                System.out.print(" ---");
+                System.out.print("+---");
             }
-            System.out.println();
+            System.out.println("+");
         }
         System.out.println();
     }
     //Imprime el tablero del ordenador.
-    public static void printComputerBoard(){
+    public static void printComputerBoard(int userShoots){
+        System.out.println();
+        System.out.println("#################################################");
+        System.out.println("############### Tablero enemigo  ################");
+        System.out.println("#################################################");
+        System.out.println();
+        System.out.printf("Disparos restantes: %d\n", userShoots);
         System.out.print("   ");
         for(int i = 0; i < columns; i++){
             System.out.printf("  %d ", i);
@@ -151,37 +161,56 @@ public class Board{
         System.out.println();
         System.out.print("   ");
         for(int i = 0; i < columns; i++){
-            System.out.print(" ---");
+            System.out.print("+---");
         }
-        System.out.println();
+        System.out.println("+");
         for(int i = 0; i < rows; i++){
             System.out.printf(" %C ", 65+i);
             for(int j = 0; j < columns; j++){
-                // NO me funciona el color en la consola.
-                System.out.printf("|  %s%c%S ", BLUE,computerBoard[i][j],RESET);
+                System.out.printf("| %C ", computerBoard[i][j]);
 
             }
             System.out.println('|');
             System.out.print("   ");
             for (int k = 0; k < columns; k++) {
-                System.out.print(" ---");
+                System.out.print("+---");
             }
-            System.out.println();
+            System.out.println("+");
         }
+        System.out.println();
     }
     //Invoca el controlador de disparos y actualiza el tablero.
     public static String shoot(int row, int col){
         String playerShoot = "";
-        if(!repeatedShot(row, col)){
-            if(computerBoard[row][col] == '-'){
-                playerBoard[row][col] = 'A';
-                computerBoard[row][col] = 'O';
-                playerShoot = "Agüita!! Inténtalo de nuevo, ¡Ánimos soldado!";
-            } else if(computerBoard[row][col] == 'L' || computerBoard[row][col] == 'B' || computerBoard[row][col] == 'Z' || computerBoard[row][col] == 'P'){
-                playerBoard[row][col] = 'X';
-                computerBoard[row][col] = 'X';
-                playerShoot =  "Tocado!! Sigue así, ¡Vamos a hundirlos!";
-            }
+        if(computerBoard[row][col] == '-'){
+            playerBoard[row][col] = 'A';
+            computerBoard[row][col] = 'O';
+            playerShoot =
+                    "\n \n"+
+                    "   ____        _____    __    __     ____   \n" +
+                    "  (    )      / ___ \\   ) )  ( (    (    )  \n" +
+                    "  / /\\ \\     / /   \\_) ( (    ) )   / /\\ \\  \n" +
+                    " ( (__) )   ( (  ____   ) )  ( (   ( (__) ) \n" +
+                    "  )    (    ( ( (__  ) ( (    ) )   )    (  \n" +
+                    " /  /\\  \\    \\ \\__/ /   ) \\__/ (   /  /\\  \\ \n" +
+                    "/__(  )__\\    \\____/    \\______/  /__(  )__\\ \n"+
+                    "      Inténtalo de nuevo, ¡Ánimos soldado!"+
+                    "\n \n";
+        } else if(computerBoard[row][col] == 'L' || computerBoard[row][col] == 'B' || computerBoard[row][col] == 'Z' || computerBoard[row][col] == 'P'){
+            playerBoard[row][col] = 'X';
+            computerBoard[row][col] = 'X';
+            playerShoot =
+                    "\n \n"+
+                    "            )                (         )  \n" +
+                            "  *   )  ( /(    (     (     )\\ )   ( /(  \n" +
+                            "` )  /(  )\\())   )\\    )\\   (()/(   )\\()) \n" +
+                            " ( )(_))((_)\\  (((_)((((_)(  /(_)) ((_)\\  \n" +
+                            "(_(_())   ((_) )\\___ )\\ _ )\\(_))_    ((_) \n" +
+                            "|_   _|  / _ \\((/ __|(_)_\\(_)|   \\  / _ \\ \n" +
+                            "  | |   | (_) || (__  / _ \\  | |) || (_) |\n" +
+                            "  |_|    \\___/  \\___|/_/ \\_\\ |___/  \\___/\n "+
+                            "        Sigue así, ¡Vamos a hundirlos!"+
+                    "\n \n";
         }
         return playerShoot;
     }
