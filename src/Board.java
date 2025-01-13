@@ -31,6 +31,7 @@ public class Board{
     public static void insertShips(int boats, int ships, int battleships, int aircraftCarriers){
         setShip('P', 5, aircraftCarriers, 1);
         setShip('Z', 4, battleships, 0);
+        setShip('B', 3, ships, 0);
         setShip('L', 1, boats, 0);
     }
     //Invoca la validación para colocar el barco en el tablero y lo coloca.
@@ -39,15 +40,18 @@ public class Board{
         while (numberOfShips > 0) {
             int row = randomize(0, rows - 1);
             int col = randomize(0, columns - 1);
-            System.out.println("row: "+row+" col: "+col);
-            System.out.println("number of ships: "+numberOfShips);
-            if(!validateBox(size,position, row, col)) {
+            //System.out.println("row: "+row+" col: "+col);
+            //System.out.println("number of ships: "+numberOfShips);
+            if(validateBox(size,position, row, col)) {
+            //System.out.println("Casilla validada, se coloca en"+"row: "+row+" col: "+col);
             // position 0 = horizontal, 1 = vertical
                 if (position == 0) {
+                    //System.out.println("Colocando barco en horizontal"+"Tipo de barco: "+kindOfShip+" Tamaño: "+size);
                     for (int i = 0; i < size; i++) {
                         computerBoard[row][col + i] = kindOfShip;
                     }
                 } else {
+                    //System.out.println("Colocando barco en vertical"+"Tipo de barco: "+kindOfShip+" Tamaño: "+size);
                     for (int i = 0; i < size; i++) {
                         computerBoard[row + i][col] = kindOfShip;
                     }
@@ -56,23 +60,20 @@ public class Board{
             }
         }
     }
-    // Valída si hay espacio suficiente para colocar el barco, respetando que exista una distancia de dos posiciones entre barcos, tanto en horizontal como en vertical.
+    // Valída si hay espacio suficiente para colocar el barco, respetando que exista una distancia minima de dos posiciones entre barcos, tanto en horizontal como en vertical.
     public static boolean validateBox(int size, int position, int row, int col) {
         if (position == 0) {
-            if(col + size  > columns-1){
-                System.out.println("No hay espacio suficiente para colocar el barco");
-                return false;
-            }
+            // Distancia mínima libre hacia la derecha en horizontal
+            if(col + size  > columns-1) return false;
             // Disponibilidad de las posiciones del tamaño del barco hacia la derecha en horizontal y si guarda una distancia de dos posiciones entre barcos, tanto en horizontal como en vertical
             for(int i = 0 ; i < size + 2; i++) {
-                if (col + i < columns -1  && computerBoard[row][col + i] != '-') return false;
+                if (col + i < columns-1 && computerBoard[row][col + i] != '-') return false;
             }
             // Comprueba si hay dos posiciones libre hacia la izquierda en horizontal
-            for (int i = 1 ; i <= 2; i++) {
-                    if (col - i >= 0 && computerBoard[row][col-i] != '-') return false;
+            for (int i = 1; i <= 2; i++) {
+                if (col - i >= 0 && computerBoard[row][col-1] != '-') return false;
             }
-
-            // Distancia mínima libre hacia abajo en vertical
+            // Comprueba si hay dos posiciones libre hacia abajo en vertical
             if(row < rows-1){
                 for(int i = 1; i <= 2; i++){
                     if (row + i < rows  && computerBoard[row+i][col] != '-') return false;
@@ -84,6 +85,7 @@ public class Board{
                     if (row - i >= 0  && computerBoard[row-i][col] != '-' ) return false;
                 }
             }
+
         } else {
             if(row + size  > rows-1){
                 return false;
@@ -114,7 +116,6 @@ public class Board{
     }
     //Imprime el tablero del jugador
     public static void printPlayerBoard(int userShoots, String user){
-        System.out.println();
         System.out.println("#################################################");
         String charactersHeader = ( user.equals("Cobarde") ) ? "###############" : "############";
         System.out.println(" "+charactersHeader+" Tablero de "+user+" "+charactersHeader);
@@ -186,7 +187,7 @@ public class Board{
             playerBoard[row][col] = 'A';
             computerBoard[row][col] = 'O';
             playerShoot =
-                    "\n \n"+
+                    "\n"+
                     "   ____        _____    __    __     ____   \n" +
                     "  (    )      / ___ \\   ) )  ( (    (    )  \n" +
                     "  / /\\ \\     / /   \\_) ( (    ) )   / /\\ \\  \n" +
@@ -195,12 +196,12 @@ public class Board{
                     " /  /\\  \\    \\ \\__/ /   ) \\__/ (   /  /\\  \\ \n" +
                     "/__(  )__\\    \\____/    \\______/  /__(  )__\\ \n"+
                     "      Inténtalo de nuevo, ¡Ánimos soldado!"+
-                    "\n \n";
+                    "\n";
         } else if(computerBoard[row][col] == 'L' || computerBoard[row][col] == 'B' || computerBoard[row][col] == 'Z' || computerBoard[row][col] == 'P'){
             playerBoard[row][col] = 'X';
             computerBoard[row][col] = 'X';
             playerShoot =
-                    "\n \n"+
+                    "\n"+
                     "            )                (         )  \n" +
                             "  *   )  ( /(    (     (     )\\ )   ( /(  \n" +
                             "` )  /(  )\\())   )\\    )\\   (()/(   )\\()) \n" +
@@ -210,7 +211,7 @@ public class Board{
                             "  | |   | (_) || (__  / _ \\  | |) || (_) |\n" +
                             "  |_|    \\___/  \\___|/_/ \\_\\ |___/  \\___/\n "+
                             "        Sigue así, ¡Vamos a hundirlos!"+
-                    "\n \n";
+                    "\n";
         }
         return playerShoot;
     }

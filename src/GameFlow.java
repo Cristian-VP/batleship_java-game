@@ -53,7 +53,7 @@ public class GameFlow {
             System.out.println("|                                         |");
             System.out.println("|=========================================|");
             System.out.println("|    Dificultad             Número        |");
-            System.out.println("|                                         |");
+            System.out.println("|    ----------             ------        |");
             System.out.println("|    Cobarde                  1           |");
             System.out.println("|    Aventurero               2           |");
             System.out.println("|    Destructor               3           |");
@@ -67,20 +67,20 @@ public class GameFlow {
                 case 1:
                     System.out.println("####################################################");
                     System.out.println("  Has seleccionado la dificultad Cobarde ");
-                    System.out.println("  Tienes 50 disparos para hundir 10 barcos de guerra");
+                    System.out.println("  Tienes 30 disparos para hundir 10 barcos de guerra");
                     System.out.println("####################################################");
                     System.out.println();
-                    Board.insertShips(10, 0, 0, 0);
+                    Board.insertShips(5, 3, 1, 1);
                     user = "Cobarde ";
-                    tries = 4;
+                    tries = 50;
                     break;
                 case 2:
                     System.out.println("###################################################");
                     System.out.println(" Has seleccionado la dificultad Aventurero ");
-                    System.out.println(" Tienes 30 disparos para hundir 5 barcos de guerra");
+                    System.out.println(" Tienes 20 disparos para hundir 5 barcos de guerra");
                     System.out.println("###################################################");
                     System.out.println();
-                    Board.insertShips(10, 0, 0, 0);
+                    Board.insertShips(2, 1, 1, 1);
                     user = "Aventurero";
                     tries = 30;
                     break;
@@ -91,15 +91,16 @@ public class GameFlow {
                     System.out.println("###################################################");
                     System.out.println();
                     System.out.println();
-                    Board.insertShips(10, 0, 0, 0);
+                    Board.insertShips(1, 1, 0, 0);
                     user = "Destructor";
-                    tries = 10;
+                    tries = 15;
                     break;
                 default :
                     System.out.println("Dificultad no válida");
             }
             startGame(board);
         }
+        scanner.close();
     }
 
     public static void startGame(Board board) {
@@ -110,6 +111,9 @@ public class GameFlow {
             System.out.print("Introduce la primera coordenada (0-9):");
             int xCoordinate = intCoordinateValidator(scanner);
             String yCoordinate = charCoordinateValidator(scanner);
+            System.out.println();
+            System.out.println();
+            System.out.println();
             System.out.printf("Disparando a la coordenada: (%d-%S)\n", xCoordinate, yCoordinate);
             if(Board.repeatedShot(convertCharToIntCoordinate(yCoordinate), xCoordinate)){
                 System.out.println("Ya has disparado a esta coordenada ¡No desperdicies disparos!");
@@ -119,20 +123,20 @@ public class GameFlow {
                 tries--;
             }
         }while (Board.checkShipsAlive() && tries > 0);
-            if(tries == 0) {
-                System.out.println("¡Has perdido! Te has quedado sin disparos");
-                System.out.println(("Los barcos enemigos han ganado"));
-                System.out.println("Tablero de barcos enemigos:");
-                Board.printComputerBoard(tries);
-            }
-            if(!Board.checkShipsAlive()){
-                System.out.println("¡Has ganado! Has hundido todos los barcos");
-                System.out.println(("Los barcos enemigos no han podido con tu astucia"));
-                System.out.println("#################################################");
-                System.out.println("############### Tablero enemigo #################");
-                System.out.println("#################################################");
-                Board.printComputerBoard(tries);
-            }
+        if(tries == 0) {
+            System.out.println("¡Has perdido! Te has quedado sin disparos");
+            System.out.println(("Los barcos enemigos han ganado"));
+            System.out.println("Tablero de barcos enemigos:");
+            Board.printComputerBoard(tries);
+        }
+        if(!Board.checkShipsAlive()){
+            System.out.println("¡Has ganado! Has hundido todos los barcos");
+            System.out.println(("Los barcos enemigos no han podido con tu astucia"));
+            System.out.println("#################################################");
+            System.out.println("############### Tablero enemigo #################");
+            System.out.println("#################################################");
+            Board.printComputerBoard(tries);
+        }
     }
 
     public static int convertCharToIntCoordinate(String yCoordinate){
@@ -166,9 +170,10 @@ public class GameFlow {
                 }
             }else{
                 System.out.println("Dato introducido no válido, solo puede ser numérico");
+                input.nextLine();
             }
-            System.out.print("Introduce una coordenada nuevamente (0-9):");
             input.nextLine();
+            System.out.print("Introduce una coordenada nuevamente (0-9):");
         }
     }
 
